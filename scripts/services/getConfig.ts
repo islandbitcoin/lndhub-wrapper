@@ -3,18 +3,22 @@
 import { compat, types as T } from "../deps.ts";
 
 export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
-  "lnurlp-comment-allowed": {
-    "type": "string",
-    "name": "LNURL-pay Comment Length",
-    "description": "Allowed length of LNURL-pay comments, maximum characters is 2000",
-    "nullable": false,
-    "default": "210"
+  "tor-address": {
+    "name": "Network Tor Address",
+    "description": "The Tor address for the network interface.",
+    "type": "pointer",
+    "subtype": "package",
+    "package-id": "lndhub",
+    "target": "tor-address",
+    "interface": "main"
   },
-  "request-limit": {
-      "type": "string",
-      "name": "Request Limit",
-      "description": "Limit the allowed requests per second",
-      "default": "5",
-      "nullable": false
+  "lan-address": {
+    "name": "Network LAN Address",
+    "description": "The LAN address for the network interface.",
+    "type": "pointer",
+    "subtype": "package",
+    "package-id": "lndhub",
+    "target": "lan-address",
+    "interface": "main"
   }
 });

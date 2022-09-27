@@ -1,15 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
 echo "Setting environment variables..."
-export LNURLP_COMMENTS=$(yq e '.lnurlp-comment-allowed' /root/start9/config.yaml)
-export REQUEST_LIMIT=$(yq e '.request-limit' /root/start9/config.yaml)
+export TOR_ADDRESS=$(yq e '.tor-address' /lndhub-data/start9/config.yaml)
+export REDIS_PASS="password"
+export PORT="3000"
+export TOR_URL="$TOR_ADDRESS"
+export LND_CERT_FILE="/mnt/lnd/tls.cert"
+export LND_ADMIN_MACAROON_FILE="/mnt/lnd/admin.macaroon"
+export CONFIG='{ "redis": { "port": 6379, "host": "localhost", "family": 4, "password": "password", "db": 0 }, "lnd": { "url": "lnd.embassy:10009", "password": ""}}'
+cp $LND_CERT_FILE /lndhub/ && cp $LND_ADMIN_MACAROON_FILE /lndhub/ 
 
-echo 'Starting LnMe...'
-exec tini ./lnme \
-  --lnd-address=lnd.embassy:10009 \
-  --lnd-cert-path=/mnt/lnd/tls.cert \
-  --lnd-macaroon-path=/mnt/lnd/invoice.macaroon \
-  --lnurlp-comment-allowed=$LNURLP_COMMENTS \
-  --request-limit=$REQUEST_LIMIT
+echo "Starting Redis server..."
+redis-server --requirepass $REDIS_PASS &
+
+echo 'Starting lndhub...'
+exec tini npm start 

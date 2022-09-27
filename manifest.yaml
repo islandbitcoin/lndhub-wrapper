@@ -1,17 +1,19 @@
-id: lnme 
-title: "LnMe"
-version: 1.5.1
+id: lndhub 
+title: "LndHub"
+version: 1.4.1
 release-notes: "Initial Release for EmbassyOS"
 license: mit
-wrapper-repo: "https://github.com/islandbitcoin/lnme-wrapper"
-upstream-repo: "https://github.com/bumi/lnme"
-support-site: "https://github.com/bumi/lnme/issues"
-marketing-site: "https://michaelbumann.com"
+wrapper-repo: "https://github.com/islandbitcoin/lndhub-wrapper"
+upstream-repo: "https://github.com/BlueWallet/LndHub"
+support-site: "https://github.com/BlueWallet/LndHub/issues"
+marketing-site: "https://LndHub.io"
 build: ["make"]
 description:
-  short: Your friendly Bitcoin Lightning ⚡ payment page ⚡
+  short: Wrapper for Lightning Network Daemon. It provides separate accounts with minimum trust for end users.
   long: |
-    LnMe is a personal Bitcoin Lightning payment page or widget and self-hosted Lightning Address server.
+    A free and open source, multiple account plugin for Lightning built on top of the Lightning Network Deamon. It allows that a group of users run different accounts with only one node in a trust-minimized setup.
+
+    Ideal for hosted shared services or groups, families and friends that want to share their own node.
 assets:
   license: LICENSE
   icon: icon.svg
@@ -23,12 +25,12 @@ main:
   entrypoint: docker_entrypoint.sh
   args: []
   mounts:
-    main: /root
+    main: /lndhub-data
     lnd: /mnt/lnd
 health-checks:
   web-ui:
-    name: Web UI
-    success-message: lnme is ready to visit in a web browser
+    name: API
+    success-message: LndHub API is ready and accepting requests
     type: script
 config: 
   get:
@@ -48,19 +50,20 @@ volumes:
     readonly: true
 interfaces:
   main:
-    name: LnMe Web Interface
-    description: Specifies the interface to listen on for HTTP connections.
+    name: REST API
+    description: Serves the LndHub API
     tor-config:
       port-mapping:
-        80: "1323"
+        3000: "3000"
     lan-config:
-      443:
-        ssl: true
-        internal: 1323
-    ui: true
+      3000:
+        ssl: false
+        internal: 3000
+    ui: false
     protocols:
       - tcp
       - http
+      - lndhub
 dependencies: 
   lnd:
     version: ">=0.11.0 <0.16.0"
@@ -77,10 +80,10 @@ backup:
       - duplicity
       - create
       - /mnt/backup
-      - /root/data
+      - /lndhub-data/data
     mounts:
       BACKUP: "/mnt/backup" 
-      main: "/root/data"
+      main: "/lndhub-data/data"
   restore:
     type: docker
     image: compat
@@ -89,11 +92,11 @@ backup:
     args:
       - duplicity
       - restore
-      - /root/data
+      - /lndhub-data/data
       - /mnt/backup
     mounts:
       BACKUP: "/mnt/backup"
-      main: "/root/data"
+      main: "/lndhub-data/data"
 migrations:
  from:
    "*":

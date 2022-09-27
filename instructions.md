@@ -1,14 +1,9 @@
-# Welcome to LnMe!
+# Welcome to lndhub!
 
-Your friendly Bitcoin Lightning ⚡ payment page ⚡
+A Wrapper for Lightning Network Daemon (lnd). It provides separate accounts with minimum trust for end users.
 
 ## Usage Instructions
 
-Open LnMe by using the `LAUNCH UI` button.
+Open BlueWallet on your device, and add your LndHub Tor address (.onion) url to in Lightning Settings. You are self-sovereign!
 
-## Lightning Address
-
-You can now accept lighting payments using your LnMe Tor hidden service address. 
-
-Your Lightning Address Format:
-`<anything>@<lnme_tor_address.onion>`
+Note: you may need to install and run the Tor Browser or Orbot depending on your device. 
